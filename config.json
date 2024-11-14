@@ -1,0 +1,8 @@
+{
+    "logging": {
+        "minimumLevel": 5,
+        "path": "logs/",
+        "fileSizeLimitMegabytes": 10,
+        "printLogsToConsole": 1
+    }
+}
