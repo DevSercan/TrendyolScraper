@@ -42,7 +42,7 @@ class Trendyol:
     def getFollowerCount(self, sellerId):
         try:
             log.debug(f"[sellerId={sellerId}] The 'getFollowerCount' function of the 'Trendyol' class has been executed.")
-            url = f"https://public.trendyol.com/discovery-sellerstore-webgw-service/v1/follow/?sellerId={sellerId}"
+            url = f"https://public.trendyol.com/discovery-sellerstore-webgw-service/v1/follow/?sellerId={sellerId}&culture=tr-TR&channelId=1"
             response = self._getResponse(url)
             if response.status_code == 200:
                 return int(response.json()["count"])
@@ -58,12 +58,12 @@ class Trendyol:
     def getStoreName(self, sellerId):
         try:
             log.debug(f"[sellerId={sellerId}] The 'getStoreName' function of the 'Trendyol' class has been executed.")
-            url = f"https://trendyol.com/magaza/profil/magaza-m-{sellerId}?sk=1"
+            url = f"https://public.trendyol.com/discovery-sellerstore-webgw-service/v1/seller-store/header?culture=tr-TR&storefrontId=1&supplierId={sellerId}&sellerStoreFrom=Profile&channelId=1"
             response = self._getResponse(url)
             if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'lxml')
-                storeName = soup.title.text
-                storeName = removeSuffix(storeName, "Profil Sayfası")
+                html = response.json()["result"]["html"]
+                soup = BeautifulSoup(html, 'lxml')
+                storeName = soup.find('h1', class_='seller-store__name').text
                 return storeName
             else:
                 log.debug(f"[sellerId={sellerId}] The status code of the 'getStoreName' function is {response.status_code}")
@@ -74,10 +74,30 @@ class Trendyol:
         finally:
             log.debug(f"[sellerId={sellerId}] The 'getStoreName' function of the 'Trendyol' class has completed.")
     
+    def getCategories(self, sellerId):
+        try:
+            log.debug(f"[sellerId={sellerId}] The 'getCategories' function of the 'Trendyol' class has been executed.")
+            url = f"https://apigw.trendyol.com/discovery-sellerstore-webgw-service/v1/search/aggregations?merchantId={sellerId}&culture=tr-TR&channelId=1"
+            response = self._getResponse(url)
+            categoryList = []
+            if response.status_code == 200:
+                categories = response.json()["categories"]
+                for category in categories:
+                    categoryList.append(category["text"])
+                return categoryList
+            else:
+                log.debug(f"[sellerId={sellerId}] The status code of the 'getCategories' function is {response.status_code}")
+                return None
+        except Exception as e:
+            log.error(f"[sellerId={sellerId}] Unexpected error in 'getCategories' function of the 'Trendyol' class:\n{e}")
+            return None
+        finally:
+            log.debug(f"[sellerId={sellerId}] The 'getCategories' function of the 'Trendyol' class has completed.")
+    
     def getStoreLocation(self, sellerId):
         try:
             log.debug(f"[sellerId={sellerId}] The 'getStoreLocation' function of the 'Trendyol' class has been executed.")
-            url = f"https://trendyol.com/magaza/profil/magaza-m-{sellerId}?sk=1"
+            url = f"https://trendyol.com/magaza/profil/magaza-m-{sellerId}?sk=1&channelId=1&language=tr"
             response = self._getResponse(url)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'lxml')
@@ -95,9 +115,9 @@ class Trendyol:
     def isStoreAvailable(self, sellerId):
         try:
             log.debug(f"[sellerId={sellerId}] The 'isStoreAvailable' function of the 'Trendyol' class has been executed.")
-            url = f"https://trendyol.com/magaza/magaza-m-{sellerId}?sk=1"
+            url = f"https://apigw.trendyol.com/discovery-sellerstore-webgw-service/v1/seller-store/header?culture=tr-TR&storefrontId=1&supplierId={sellerId}&sellerStoreFrom=Profile&channelId=1"
             response = self._getResponse(url)
-            if response.status_code not in [401, 403, 404]:
+            if response.status_code == 200:
                 return True
             else:
                 log.debug(f"[sellerId={sellerId}] The status code of the 'isStoreAvailable' function is {response.status_code}")

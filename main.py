@@ -54,11 +54,13 @@ def main():
                 storeName = trendyol.getStoreName(storeId)
                 storeLink = f"https://trendyol.com/magaza/magaza-m-{storeId}?sk=1"
                 followerCount = trendyol.getFollowerCount(storeId)
+                categories = trendyol.getCategories(storeId)
+                categories = ', '.join(categories)
                 storeLocation = trendyol.getStoreLocation(storeId)
 
                 if storeName: # Mağazanın mevcutluğunu, isim kontrolü yaparak doğruluyoruz.
-                    database.createStore(storeId, storeName, storeLink, followerCount, storeLocation)
-                    print(f"[{storeId}] | Mağaza İsmi: {storeName} | Takipçi Sayısı: {followerCount} | Konum: {storeLocation} |")
+                    database.createStore(storeId, storeName, storeLink, followerCount, storeLocation, categories)
+                    print(f"[{storeId}] | Mağaza İsmi: {storeName} | Takipçi Sayısı: {followerCount} | Konum: {storeLocation} | Kategoriler: {categories}")
                 else:
                     print(f"[{storeId}] Mağazanın bilgileri alınamadı.")
             else: # Mağaza mevcut değilse koşul sağlanır.

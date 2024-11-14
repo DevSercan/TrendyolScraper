@@ -27,7 +27,8 @@ class Database:
                 StoreName TEXT NOT NULL,
                 StoreLink TEXT NOT NULL,
                 FollowerCount INTEGER,
-                StoreLocation TEXT
+                StoreLocation TEXT,
+                Categories TEXT
             );
             """
             self.cursor.executescript(query)
@@ -38,13 +39,13 @@ class Database:
             log.error(f"Unexpected error occurred in 'createTable' function of 'Database' class:\n{e}")
             return False
 
-    def createStore(self, storeId:int, storeName:str, storeLink:str, followerCount:int=None, storeLocation:str=None):
+    def createStore(self, storeId:int, storeName:str, storeLink:str, followerCount:int=None, storeLocation:str=None, categories:str=None):
         try:
             log.debug("The 'createStore' function of the 'Database' class has been executed.")
             isAvailable = self.isStoreAvailable(storeId)
             if not isAvailable:
-                query = f"INSERT INTO {self.storeTableName} (StoreId, StoreName, StoreLink, FollowerCount, storeLocation) VALUES (?, ?, ?, ?, ?);"
-                self.cursor.execute(query, (storeId, storeName, storeLink, followerCount, storeLocation))
+                query = f"INSERT INTO {self.storeTableName} (StoreId, StoreName, StoreLink, FollowerCount, storeLocation, categories) VALUES (?, ?, ?, ?, ?, ?);"
+                self.cursor.execute(query, (storeId, storeName, storeLink, followerCount, storeLocation, categories))
                 self.connection.commit()
                 return True
             else:
