@@ -7,10 +7,7 @@ Bu proje, Trendyol platformundaki tüm mağaza bilgilerini toplamak için geliş
 1. **Python Yüklü Sistemler İçin**  
    Python bilgisayarınızda yüklü ise, öncelikle `requirements.txt` dosyasındaki bağımlılıkları yüklemeniz gerekmektedir. Kurulum işlemini tamamladıktan sonra `main.py` dosyasını çalıştırarak yazılımı başlatabilirsiniz.
    
-2. **Python Yüklü Olmayan Sistemler İçin**  
-   Python yüklü değilse, doğrudan `main.exe` uygulamasını çalıştırarak programı başlatabilirsiniz.
-
-3. **Program Çalıştırma Adımları**  
+2. **Program Çalıştırma Adımları**  
    Program başlatıldığında, bir konsol penceresi açılacaktır. Konsolda, başlangıç ve bitiş değerlerini girmeniz istenecektir.  
    - **Başlangıç Değeri:** Kaç numaralı mağazadan veri toplamaya başlanacağını belirler.  
    - **Bitiş Değeri:** Kaçıncı mağazada işlemin sona ereceğini belirtir.  
